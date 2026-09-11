@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PS4 Game Finder Hub</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --ps-bg: #0a0f1d;
+            --ps-card-bg: #161c2e;
+            --ps-blue: #00439c;
+            --ps-neon: #00f0ff;
+            --ps-text: #ffffff;
+            --ps-text-muted: #8a99ad;
+            --ps-accent: #ff0055;
+            --ps-hot: #ff3366;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--ps-bg);
+            background-image: radial-gradient(circle at top right, rgba(0, 67, 156, 0.3), transparent 60%),
+                              radial-gradient(circle at bottom left, rgba(0, 240, 255, 0.1), transparent 50%);
+            color: var(--ps-text);
+            min-height: 100vh;
+            padding: 20px 20px 0 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            flex: 1;
+            width: 100%;
+        }
+
+        .top-utility {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .lang-btn, .random-btn {
+            background: var(--ps-card-bg);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            color: var(--ps-text);
+            padding: 8px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+
+        .lang-btn:hover, .random-btn:hover {
+            box-shadow: 0 0 10px var(--ps-neon);
+            border-color: var(--ps-neon);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo-area {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+            margin-bottom: 5px;
+        }
+
+        .logo-area span { color: var(--ps-neon); }
+        header p { color: var(--ps-text-muted); font-size: 14px; }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--ps-neon);
+            font-size: 18px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 16px 16px 16px 55px;
+            background: var(--ps-card-bg);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .section-label {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--ps-neon);
+            margin-bottom: 8px;
+            margin-top: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .filter-group::-webkit-scrollbar { height: 4px; }
+        .filter-group::-webkit-scrollbar-thumb { background: var(--ps-card-bg); border-radius: 10px; }
+
+        .filter-btn {
+            background: var(--ps-card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 10px 16px;
+            color: var(--ps-text-muted);
+            border-radius: 20px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--ps-blue), #00255c);
+            color: #fff;
+            border-color: var(--ps-neon);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .game-card {
+            background: var(--ps-card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--ps-neon);
+            box-shadow: 0 5px 20px rgba(0, 240, 255, 0.15);
+        }
+
+        .hot-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--ps-hot);
+            color: white;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 3px 7px;
+            border-radius: 6px;
+            box-shadow: 0 0 8px rgba(255, 51, 102, 0.6);
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            z-index: 2;
+        }
+
+        .game-thumb { width: 100%; height: 180px; object-fit: cover; background: #0d111a; }
+        .game-info { padding: 10px 12px; }
+        .game-title { font-size: 13px; font-weight: 600; margin-bottom: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        
+        .badge-zone { display: flex; flex-direction: column; gap: 4px; }
+        .badge-row { display: flex; justify-content: space-between; align-items: center; }
+        .hdd-badge { font-size: 9px; background: rgba(0, 240, 255, 0.1); color: var(--ps-neon); padding: 2px 6px; border-radius: 4px; font-weight: 700; border: 1px solid rgba(0, 240, 255, 0.2); }
+        .mode-badge { font-size: 9px; color: #00ff87; font-weight: 600; }
+        .tv-tag { font-size: 9px; color: var(--ps-text-muted); }
+
+        .book-slot-btn {
+            width: calc(100% - 24px);
+            margin: 0 12px 12px 12px;
+            padding: 7px;
+            background: linear-gradient(135deg, var(--ps-blue), var(--ps-neon));
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .book-slot-btn:hover { opacity: 0.9; box-shadow: 0 0 8px var(--ps-neon); }
+
+        .request-box {
+            background: var(--ps-card-bg); border: 1px dashed rgba(0, 240, 255, 0.3); border-radius: 12px; padding: 20px; text-align: center; margin-top: 20px; margin-bottom: 40px;
+        }
+
+        .request-input { width: 70%; padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--ps-bg); color: #fff; outline: none; font-size: 14px; }
+        .request-btn { padding: 10px 15px; background: var(--ps-accent); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-left: 5px; }
+        .no-results { grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--ps-text-muted); }
+
+        /* --- Modal Popup for Booking --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(4, 7, 15, 0.85); display: none; justify-content: center; align-items: center; z-index: 100;
+        }
+        .modal-card {
+            background: var(--ps-card-bg); border: 1px solid var(--ps-neon); border-radius: 12px;
+            width: 90%; max-width: 400px; padding: 20px; box-shadow: 0 0 25px rgba(0, 240, 255, 0.2);
+        }
+        .modal-title { font-size: 16px; font-weight: bold; color: var(--ps-neon); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .modal-body { font-size: 13px; color: var(--ps-text-muted); margin-bottom: 15px; display: flex; flex-direction: column; gap: 6px; }
+        .modal-input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); background: var(--ps-bg); color: #fff; margin-bottom: 10px; outline: none; }
+        .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+        .btn-cancel { padding: 8px 12px; background: #222d48; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+        .btn-confirm { padding: 8px 15px; background: #00ff87; color: #070b14; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; }
+
+        /* --- Footer Styles --- */
+        footer {
+            background: #070b14; border-top: 1px solid rgba(0, 240, 255, 0.1);
+            padding: 20px 10px; margin-top: 40px; text-align: center; font-size: 13px; color: var(--ps-text-muted);
+            width: 100vw; margin-left: calc(-50vw + 50%);
+        }
+        .footer-content { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+        .footer-info { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        .footer-info span { display: flex; align-items: center; gap: 5px; }
+        .footer-info i { color: var(--ps-neon); }
+        .copyright { font-size: 11px; opacity: 0.7; margin-top: 5px; }
+
+        @media (max-width: 480px) {
+            .games-grid { grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 10px; }
+            .game-thumb { height: 140px; }
+            .request-input { width: 100%; margin-bottom: 10px; }
+            .request-btn { width: 100%; margin-left: 0; }
+            .footer-info { flex-direction: column; gap: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="top-utility">
+        <button class="random-btn" onclick="surpriseGame()"><i class="fa-solid fa-dice"></i> <span id="text-surprise">Surprise Me</span></button>
+        <button class="lang-btn" onclick="toggleLanguage()"><i class="fa-solid fa-globe"></i> <span id="lang-label">မြန်မာ</span></button>
+    </div>
+
+    <header>
+        <div class="logo-area"><i class="fa-brands fa-playstation"></i> PS4 GAME <span>FINDER</span></div>
+        <p id="text-subtitle">🎮 ဆော့ကစားလိုသော ဂိမ်းများကို အလွယ်တကူ ရှာဖွေပါ</p>
+    </header>
+
+    <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" class="search-input" id="searchBar" placeholder="ရှာချင်တဲ့ ဂိမ်းခေါင်းစဉ် ရိုက်ထည့်ပါ..." onkeyup="filterGames()">
+    </div>
+
+    <!-- Storage Filters -->
+    <div class="section-label" id="lbl-storage">Storage Filter</div>
+    <div class="filter-group" id="hddGroup">
+        <button class="filter-btn active" onclick="filterTab('hdd', 'all', this)"><i class="fa-solid fa-layer-group"></i> All</button>
+        <button class="filter-btn" onclick="filterTab('hdd', 'HDD-1', this)"><i class="fa-solid fa-database"></i> HDD 1</button>
+        <button class="filter-btn" onclick="filterTab('hdd', 'HDD-2', this)"><i class="fa-solid fa-database"></i> HDD 2</button>
+        <button class="filter-btn" onclick="filterTab('hdd', 'HDD-3', this)"><i class="fa-solid fa-database"></i> HDD 3</button>
+        <button class="filter-btn" onclick="filterTab('hdd', 'HDD-4', this)"><i class="fa-solid fa-database"></i> HDD 4</button>
+        <button class="filter-btn" onclick="filterTab('hdd', 'HDD-5', this)"><i class="fa-solid fa-database"></i> HDD 5</button>
+    </div>
+
+    <!-- TV Display Filters -->
+    <div class="section-label" id="lbl-tv">TV Screen Filter</div>
+    <div class="filter-group" id="tvGroup">
+        <button class="filter-btn active" onclick="filterTab('tv', 'all', this)"><i class="fa-solid fa-layer-group"></i> All TV</button>
+        <button class="filter-btn" onclick="filterTab('tv', 'TV 1', this)"><i class="fa-solid fa-tv"></i> TV 1</button>
+        <button class="filter-btn" onclick="filterTab('tv', 'TV 2', this)"><i class="fa-solid fa-tv"></i> TV 2</button>
+        <button class="filter-btn" onclick="filterTab('tv', 'TV 3', this)"><i class="fa-solid fa-tv"></i> TV 3</button>
+        <button class="filter-btn" onclick="filterTab('tv', 'TV 4', this)"><i class="fa-solid fa-tv"></i> TV 4</button>
+    </div>
+
+    <!-- Game Mode Filter Tabs -->
+    <div class="section-label" id="lbl-mode">Game Mode Filter</div>
+    <div class="filter-group" id="modeGroup">
+        <button class="filter-btn active" onclick="filterTab('mode', 'all', this)"><i class="fa-solid fa-gamepad"></i> All Modes</button>
+        <button class="filter-btn" onclick="filterTab('mode', 'single', this)"><i class="fa-solid fa-user"></i> Single Player</button>
+        <button class="filter-btn" onclick="filterTab('mode', 'multi', this)"><i class="fa-solid fa-users"></i> Multiplayer</button>
+    </div>
+
+    <div class="games-grid" id="gamesContainer"></div>
+
+    <!-- Game Request Box -->
+    <div class="request-box">
+        <h3 style="font-size: 15px; margin-bottom: 10px;" id="text-req-title">🔍 မရှိသေးတဲ့ ဂိမ်းအသစ် တောင်းဆိုမလား?</h3>
+        <input type="text" class="request-input" id="reqInput" placeholder="ဂိမ်းအမည် ရိုက်ထည့်ပါ...">
+        <button class="request-btn" onclick="sendGameRequest()" id="text-req-btn">Request</button>
+    </div>
+</div>
+
+<!-- Booking Modal Popup -->
+<div class="modal-overlay" id="bookingModal">
+    <div class="modal-card">
+        <div class="modal-title"><i class="fa-solid fa-calendar-check"></i> Book Game Slot</div>
+        <div class="modal-body">
+            <span><strong>Game:</strong> <span id="modalGameTitle">-</span></span>
+            <span><strong>Location:</strong> <span id="modalGameLoc">-</span></span>
+        </div>
+        <input type="text" class="modal-input" id="bookerName" placeholder="Enter your name...">
+        <input type="text" class="modal-input" id="bookerPhone" placeholder="Enter phone number...">
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn-confirm" onclick="confirmBooking()">Confirm & Send</button>
+        </div>
+    </div>
+</div>
+
+<!-- Footer Section -->
+<footer>
+    <div class="footer-content">
+        <div class="footer-info">
+            <span id="foot-shop"><i class="fa-solid fa-shop"></i> PS4 Gaming Lounge</span>
+            <span id="foot-time"><i class="fa-solid fa-clock"></i> Open Daily: 9:00 AM - 10:00 PM</span>
+            <span id="foot-loc"><i class="fa-solid fa-location-dot"></i> Ahlone Township, Yangon</span>
+        </div>
+        <div class="copyright" id="foot-copy">
+            &copy; 2026 PS4 Game Finder. Developed by Hein Htet Ko. All Rights Reserved.
+        </div>
+    </div>
+</footer>
+
+<script>
+    let currentLang = 'en';
+    let hddFilter = 'all';
+    let tvFilter = 'all';
+    let modeFilter = 'all'; 
+    let selectedGameForBooking = null;
+
+    // 🌟 အဆင့်မြှင့်တင်ထားသော စုစုပေါင်း Games Data စာရင်း (HDD 1 - 5 + All TV Games)
+    const gamesData = [
+        // --- TV & HDD အားလုံးတွင် ရှိသော Top Popular Games ---
+        { title: "Grand Theft Auto V", hdd: ["HDD-1", "HDD-2", "HDD-3", "HDD-4", "HDD-5"], tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "Gta5.webp", trending: true },
+        { title: "EA Sports FC 26", hdd: ["HDD-1", "HDD-2", "HDD-3", "HDD-4", "HDD-5"], tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "Fc26.jpg", trending: true },
+        { title: "Red Dead Redemption 2", hdd: ["HDD-1", "HDD-2", "HDD-3", "HDD-4", "HDD-5"], tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "red dead.webp", trending: true },
+        { title: "God of War Ragnarök", hdd: ["HDD-1", "HDD-2", "HDD-3", "HDD-4", "HDD-5"], tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "god of war.jpg", trending: true },
+
+        // --- HDD-1 ---
+        { title: "Death Stranding", hdd: "HDD-1", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Days Gone", hdd: "HDD-1", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Gran Turismo 7", hdd: "HDD-1", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "", trending: true },
+        { title: "Marvel's Spider-Man", hdd: "HDD-1", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Tour de France 2023", hdd: "HDD-1", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+        { title: "A Way Out", hdd: "HDD-1", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "", trending: true },
+        { title: "Hitman 2", hdd: "HDD-1", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Naruto Shippuden: Ultimate Ninja Storm 4", hdd: "HDD-1", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+        { title: "God Hand", hdd: "HDD-1", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Silent Hill", hdd: "HDD-1", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+
+        // --- HDD-2 ---
+        { title: "It Takes Two", hdd: "HDD-2", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "", trending: true },
+        { title: "eFootball", hdd: "HDD-2", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "", trending: true },
+        { title: "Uncharted 4: A Thief's End", hdd: "HDD-2", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Crash Team Racing Nitro-Fueled", hdd: "HDD-2", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+        { title: "Assassin's Creed Valhalla", hdd: "HDD-2", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Devil May Cry 5", hdd: "HDD-2", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Toy Story 3", hdd: "HDD-2", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Unravel Two", hdd: "HDD-2", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "Unravel Two.jpg" },
+        { title: "Metro Exodus", hdd: "HDD-2", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+
+        // --- HDD-3 ---
+        { title: "Call of Duty: Black Ops Cold War", hdd: "HDD-3", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "", trending: true },
+        { title: "Call of Duty: Ghosts", hdd: "HDD-3", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+        { title: "The Playroom", hdd: "HDD-3", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+        { title: "Call of Duty: WWII", hdd: "HDD-3", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+        { title: "Call of Duty: Modern Warfare 2 Remastered", hdd: "HDD-3", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Sniper Elite 4", hdd: "HDD-3", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "", trending: true },
+
+        // --- HDD-4 ---
+        { title: "Crash Bandicoot 4: It's About Time", hdd: "HDD-4", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer (2P)", image: "" },
+        { title: "Cuphead", hdd: "HDD-4", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer (2P)", image: "" },
+        { title: "Demon Slayer: Hinokami Chronicles", hdd: "HDD-4", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer (2P)", image: "" },
+        { title: "Dragon Ball Xenoverse 2", hdd: "HDD-4", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Far Cry 6", hdd: "HDD-4", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Green Hell", hdd: "HDD-4", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Kena: Bridge of Spirits", hdd: "HDD-4", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Little Nightmares II", hdd: "HDD-4", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Little Nightmares", hdd: "HDD-4", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Minecraft", hdd: "HDD-4", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "", trending: true },
+        { title: "MX vs ATV Legends", hdd: "HDD-4", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+        { title: "Street Fighter 6", hdd: "HDD-4", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "", trending: true },
+        { title: "WWE 2K23", hdd: "HDD-4", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+
+        // --- HDD-5 ---
+        { title: "Naruto x Boruto: Ultimate Ninja Storm Connections", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+        { title: "Mortal Kombat 11", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+        { title: "It Takes Two", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "", trending: true },
+        { title: "WWE 2K24", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "", trending: true },
+        { title: "Crash Team Racing Nitro-Fueled", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+        { title: "Assassin's Creed Valhalla", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Unravel Two", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+        { title: "EA Sports UFC 4", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "ufc 4.jpg" },
+        { title: "Knack 2", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+        { title: "A Way Out", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "", trending: true },
+        { title: "The Crew 2", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+        { title: "Injustice 2", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+        { title: "The Playroom", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+        { title: "Team Sonic Racing", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+        { title: "PES 2026 (BITBOX PATCH)", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "", trending: true },
+        { title: "Ace Combat 7: Skies Unknown", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Battlefield 1", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "single", modeLabel: "Single Player", image: "" },
+        { title: "Crash Bandicoot 4: It's About Time", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" },
+        { title: "Tour de France 2023", hdd: "HDD-5", tv: ["TV 1", "TV 2", "TV 3", "TV 4"], mode: "multi", modeLabel: "Multiplayer", image: "" }
+    ];
+
+    // 🌟 1. Render Games Function
+    function renderGames(data) {
+        const container = document.getElementById('gamesContainer');
+        container.innerHTML = '';
+        if(data.length === 0) {
+            container.innerHTML = `<div class="no-results">No games found.</div>`;
+            return;
+        }
+        data.forEach(game => {
+            const card = document.createElement('div');
+            card.className = 'game-card';
+            let hotTagHtml = game.trending ? `<div class="hot-badge"><i class="fa-solid fa-fire"></i> HOT</div>` : '';
+            
+            const hddDisplay = Array.isArray(game.hdd) ? "All HDDs" : game.hdd;
+            const tvListText = Array.isArray(game.tv) ? game.tv.join(', ') : game.tv;
+
+            card.innerHTML = `
+                ${hotTagHtml}
+                <div>
+                    <img src="${game.image}" class="game-thumb" alt="${game.title}" onerror="this.src='https://placehold.co/300x400/161c2e/00f0ff?text=PS4+GAME'">
+                    <div class="game-info">
+                        <div class="game-title">${game.title}</div>
+                        <div class="badge-zone">
+                            <div class="badge-row">
+                                <span class="hdd-badge">${hddDisplay}</span>
+                                <span class="mode-badge">${game.modeLabel}</span>
+                            </div>
+                            <div class="badge-row" style="margin-top: 4px;">
+                                <span class="tv-tag"><i class="fa-solid fa-tv"></i> ${tvListText}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="book-slot-btn" onclick='openBookingModal(${JSON.stringify(game)})'>Book Slot</button>`;
+            container.appendChild(card);
+        });
+    }
+
+    // 🌟 2. Smart Filter Games Function (HDD & TV Array Structure Compatible)
+    function filterGames() {
+        const query = document.getElementById('searchBar').value.toLowerCase();
+        const filtered = gamesData.filter(g => {
+            const matchHdd = hddFilter === 'all' || (Array.isArray(g.hdd) ? g.hdd.includes(hddFilter) : g.hdd === hddFilter);
+            const matchTv = tvFilter === 'all' || (Array.isArray(g.tv) ? g.tv.includes(tvFilter) : g.tv === tvFilter);
+            const matchMode = modeFilter === 'all' || g.mode === modeFilter;
+            const matchSearch = g.title.toLowerCase().includes(query);
+            return matchHdd && matchTv && matchMode && matchSearch;
+        });
+        renderGames(filtered);
+    }
+
+    // 🌟 3. Open Booking Modal
+    function openBookingModal(game) {
+        selectedGameForBooking = game;
+        document.getElementById('modalGameTitle').innerText = game.title;
+        
+        let tvSelectHtml = `<select id="modalTvSelect" class="modal-input" style="margin-bottom:0; margin-top:5px;">`;
+        if (Array.isArray(game.tv)) {
+            game.tv.forEach(tvName => {
+                tvSelectHtml += `<option value="${tvName}">${tvName}</option>`;
+            });
+        } else {
+            tvSelectHtml += `<option value="${game.tv}">${game.tv}</option>`;
+        }
+        tvSelectHtml += `</select>`;
+
+        const hddDisplay = Array.isArray(game.hdd) ? "All HDDs" : game.hdd;
+        document.getElementById('modalGameLoc').innerHTML = `<div>${hddDisplay}</div> ${tvSelectHtml}`;
+        document.getElementById('bookingModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('bookingModal').style.display = 'none';
+        document.getElementById('bookerName').value = '';
+        document.getElementById('bookerPhone').value = '';
+    }
+
+    // 🌟 4. Confirm Booking Function (Redirect to Telegram)
+    function confirmBooking() {
+        const name = document.getElementById('bookerName').value.trim();
+        const phone = document.getElementById('bookerPhone').value.trim();
+        const chosenTv = document.getElementById('modalTvSelect').value;
+        
+        if(!name || !phone) {
+            alert('Please enter your name and phone number!');
+            return;
+        }
+
+        const telegramUsername = "your_telegram_username"; // သင့် Telegram Username ကို @ မပါဘဲ ပြောင်းပါ
+        const hddDisplay = Array.isArray(selectedGameForBooking.hdd) ? "All HDDs" : selectedGameForBooking.hdd;
+
+        const message = `🎮 **New PS4 Booking Request**\n\n` +
+                        `👤 Name: ${name}\n` +
+                        `📞 Phone: ${phone}\n` +
+                        `🕹️ Game: ${selectedGameForBooking.title}\n` +
+                        `💾 Storage: ${hddDisplay}\n` +
+                        `📺 Screen: ${chosenTv}`;
+
+        const encodedText = encodeURIComponent(message);
+        const telegramUrl = `https://t.me/${telegramUsername}?text=${encodedText}`;
+
+        window.open(telegramUrl, '_blank');
+        closeModal();
+    }
+
+    function filterTab(type, value, element) {
+        if(type === 'hdd') {
+            hddFilter = value;
+            document.querySelectorAll('#hddGroup .filter-btn').forEach(b => b.classList.remove('active'));
+        } else if(type === 'tv') {
+            tvFilter = value;
+            document.querySelectorAll('#tvGroup .filter-btn').forEach(b => b.classList.remove('active'));
+        } else {
+            modeFilter = value;
+            document.querySelectorAll('#modeGroup .filter-btn').forEach(b => b.classList.remove('active'));
+        }
+        element.classList.add('active');
+        filterGames();
+    }
+
+    function surpriseGame() {
+        const randomGame = gamesData[Math.floor(Math.random() * gamesData.length)];
+        document.getElementById('searchBar').value = randomGame.title;
+        filterGames();
+    }
+
+    function sendGameRequest() {
+        const gameName = document.getElementById('reqInput').value.trim();
+        if(!gameName) {
+            alert('Please enter a game name!');
+            return;
+        }
+
+        const telegramUsername = "your_telegram_username"; 
+        const message = `🔍 **New Game Request Alert!**\n\n` +
+                        `🎮 Requested Game: ${gameName}`;
+
+        const encodedText = encodeURIComponent(message);
+        const telegramUrl = `https://t.me/${telegramUsername}?text=${encodedText}`;
+
+        window.open(telegramUrl, '_blank');
+        document.getElementById('reqInput').value = '';
+    }
+
+    function toggleLanguage() {
+        if (currentLang === 'en') {
+            document.getElementById('lang-label').innerText = "English";
+            document.getElementById('text-subtitle').innerText = "🎮 Find your favorite PS4 games instantly";
+            document.getElementById('searchBar').placeholder = "Search game titles here...";
+            document.getElementById('text-surprise').innerText = "Surprise Me";
+            document.getElementById('text-req-title').innerText = "🔍 Request a new game?";
+            document.getElementById('reqInput').placeholder = "Type game name...";
+            document.getElementById('lbl-storage').innerText = "Storage Filter";
+            document.getElementById('lbl-tv').innerText = "TV Screen Filter";
+            document.getElementById('lbl-mode').innerText = "Game Mode Filter";
+            
+            document.getElementById('foot-shop').innerHTML = '<i class="fa-solid fa-shop"></i> PS4 Gaming Lounge';
+            document.getElementById('foot-time').innerHTML = '<i class="fa-solid fa-clock"></i> Open Daily: 9:00 AM - 10:00 PM';
+            document.getElementById('foot-loc').innerHTML = '<i class="fa-solid fa-location-dot"></i> Ahlone Township, Yangon';
+            document.getElementById('foot-copy').innerHTML = '&copy; 2026 PS4 Game Finder. Developed by Hein Thiha Aung. All Rights Reserved.';
+            
+            currentLang = 'mm';
+        } else {
+            document.getElementById('lang-label').innerText = "မြန်မာ";
+            document.getElementById('text-subtitle').innerText = "🎮 ဆော့ကစားလိုသော ဂိမ်းများကို အလွယ်တကူ ရှာဖွေပါ";
+            document.getElementById('searchBar').placeholder = "ရှာချင်တဲ့ ဂိမ်းခေါင်းစဉ် ရိုက်ထည့်ပါ...";
+            document.getElementById('text-surprise').innerText = "ကျပန်းရွေးရန်";
+            document.getElementById('text-req-title').innerText = "🔍 မရှိသေးတဲ့ ဂိမ်းအသစ် တောင်းဆိုမလား?";
+            document.getElementById('reqInput').placeholder = "ဂိမ်းအမည် ရိုက်ထည့်ပါ...";
+            document.getElementById('lbl-storage').innerText = "သိုလှောင်မှုစနစ် (Storage)";
+            document.getElementById('lbl-tv').innerText = "တီဗွီဖန်သားပြင် (TV Screens)";
+            document.getElementById('lbl-mode').innerText = "ဂိမ်းအမျိုးအစား စစ်ထုတ်ရန်";
+            
+            document.getElementById('foot-shop').innerHTML = '<i class="fa-solid fa-shop"></i> PS4 ဂိမ်းဆိုင်';
+            document.getElementById('foot-time').innerHTML = '<i class="fa-solid fa-clock"></i> ဖွင့်ချိန် - နေ့စဉ် မနက် ၉:၀၀ မှ ည ၁၀:၀၀ ထိ';
+            document.getElementById('foot-loc').innerHTML = '<i class="fa-solid fa-location-dot"></i> အလုံမြို့နယ်၊ ရန်ကုန်မြို့';
+            document.getElementById('foot-copy').innerHTML = '&copy; 2026 PS4 Game Finder. Developed by Hein Thiha Aung. All Rights Reserved.';
+            
+            currentLang = 'en';
+        }
+    }
+
+    renderGames(gamesData);
+</script>
+</body>
+</html>
