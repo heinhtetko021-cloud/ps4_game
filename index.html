@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PS4 Game Finder Hub</title>
+    <title>H-Gaming Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -466,6 +466,88 @@
         .tv-tag { font-size: 0.64rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .tv-tag i { color: var(--blue); }
 
+        /* ---------- price tag ---------- */
+        .price-tag {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(0, 229, 255, 0.06);
+            border: 1px solid rgba(0, 229, 255, 0.18);
+            border-radius: 8px;
+            padding: 5px 9px;
+            margin: 0;
+        }
+
+        .price-tag .price-amount {
+            font-family: var(--font-head);
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: var(--ok);
+        }
+
+        .price-tag .price-unit {
+            font-size: 0.6rem;
+            color: var(--dim);
+            font-weight: 600;
+        }
+
+        .price-tag .price-snack {
+            font-size: 0.58rem;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        /* ---------- star rating ---------- */
+        .star-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4px;
+            padding: 0;
+        }
+
+        .stars-display {
+            display: flex;
+            gap: 1px;
+        }
+
+        .stars-display i {
+            font-size: 0.68rem;
+            color: var(--muted);
+            cursor: pointer;
+            transition: color 0.15s, transform 0.15s;
+        }
+
+        .stars-display i.filled { color: #ffb020; }
+        .stars-display i:hover { transform: scale(1.25); }
+
+        .rating-info {
+            font-size: 0.58rem;
+            color: var(--muted);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .rating-info b { color: #ffb020; }
+
+        .rate-btn {
+            font-size: 0.58rem;
+            font-weight: 700;
+            color: var(--neon);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 2px 0;
+            font-family: inherit;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            transition: color 0.2s;
+        }
+
+        .rate-btn:hover { color: #fff; }
+
         .book-slot-btn {
             margin: 10px 12px 12px;
             padding: 9px;
@@ -564,6 +646,130 @@
 
         .request-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 26px var(--glow-pink); }
 
+        /* ---------- duration picker ---------- */
+        .duration-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-bottom: 8px;
+        }
+
+        .duration-chip {
+            padding: 8px 13px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid var(--border);
+            color: var(--dim);
+            font-family: inherit;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .duration-chip:hover { border-color: var(--neon); color: var(--txt); }
+        .duration-chip.active {
+            background: var(--grad-blue);
+            color: #fff;
+            border-color: var(--neon);
+            box-shadow: 0 0 14px rgba(0, 229, 255, 0.25);
+        }
+
+        .duration-custom {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .duration-custom .modal-input { margin-bottom: 0; }
+
+        .duration-total {
+            flex-shrink: 0;
+            background: rgba(0, 255, 157, 0.1);
+            border: 1px solid rgba(0, 255, 157, 0.3);
+            color: var(--ok);
+            font-family: var(--font-head);
+            font-weight: 800;
+            font-size: 0.82rem;
+            padding: 8px 12px;
+            border-radius: 10px;
+            white-space: nowrap;
+        }
+
+        /* ---------- rating modal ---------- */
+        .rating-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 6, 14, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 250;
+            padding: 18px;
+        }
+
+        .rating-overlay.open { display: flex; }
+
+        .rating-card {
+            background: var(--panel-solid);
+            border: 1px solid rgba(255, 176, 32, 0.35);
+            border-radius: 20px;
+            width: min(360px, 100%);
+            padding: 26px 24px 22px;
+            box-shadow: 0 0 50px rgba(255, 176, 32, 0.12), 0 30px 70px rgba(0, 0, 0, 0.6);
+            animation: modalPop 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+            text-align: center;
+            position: relative;
+        }
+
+        .rating-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ffb020, #ff5e3a);
+        }
+
+        .rating-card h3 {
+            font-family: var(--font-head);
+            font-size: 1rem;
+            color: #ffb020;
+            margin-bottom: 6px;
+        }
+
+        .rating-card .rate-game-name {
+            font-size: 0.85rem;
+            color: var(--dim);
+            margin-bottom: 18px;
+        }
+
+        .big-stars {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .big-stars i {
+            font-size: 2rem;
+            color: var(--muted);
+            cursor: pointer;
+            transition: color 0.15s, transform 0.2s;
+        }
+
+        .big-stars i.active { color: #ffb020; transform: scale(1.1); }
+        .big-stars i:hover { transform: scale(1.25); }
+
+        .rate-label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            min-height: 1.2em;
+        }
+
+        .rating-card .modal-actions { margin-top: 0; }
+
         /* ---------- modal ---------- */
         .modal-overlay {
             position: fixed;
@@ -580,7 +786,7 @@
 
         .modal-overlay.open { display: flex; }
 
-        .modal-card {
+.modal-card {
             background: var(--panel-solid);
             border: 1px solid rgba(0, 229, 255, 0.35);
             border-radius: 20px;
@@ -589,8 +795,12 @@
             box-shadow: 0 0 50px rgba(0, 229, 255, 0.16), 0 30px 70px rgba(0, 0, 0, 0.6);
             animation: modalPop 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
-            overflow: hidden;
+            overflow-y: auto;
+            max-height: calc(100vh - 36px);
         }
+
+        .modal-card::-webkit-scrollbar { width: 5px; }
+        .modal-card::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.3); border-radius: 99px; }
 
         .modal-card::before {
             content: "";
@@ -854,9 +1064,9 @@
     <header>
         <div class="logo-area">
             <span class="ps-icon"><i class="fa-brands fa-playstation"></i></span>
-            <div>PS4 GAME <span>FINDER</span></div>
+            <div>H-Gaming <span>FINDER</span></div>
         </div>
-        <p>🎮 Find your favourite PS4 games instantly</p>
+        <p>🎮 Find your favourite games instantly</p>
 
         <div class="stats-strip">
             <span class="stat-chip"><i class="fa-solid fa-gamepad"></i> <b id="stat-total">0</b>&nbsp;<span>Games</span></span>
@@ -929,11 +1139,29 @@
             <label class="field-label" for="modalTvSelect">📺 Choose your TV screen</label>
             <select id="modalTvSelect" class="modal-input"></select>
 
+            <label class="field-label" for="modalTimeSelect">🕐 Select time</label>
+            <select id="modalTimeSelect" class="modal-input"></select>
+
+            <label class="field-label" for="durationChips">⏱️ Play duration</label>
+            <div class="duration-chips" id="durationChips">
+                <button type="button" class="duration-chip active" data-hours="1">1 Hour</button>
+                <button type="button" class="duration-chip" data-hours="1.5">1.5 Hours</button>
+                <button type="button" class="duration-chip" data-hours="2">2 Hours</button>
+                <button type="button" class="duration-chip" data-hours="3">3 Hours</button>
+            </div>
+            <div class="duration-custom">
+                <input type="number" class="modal-input" id="durationCustom" placeholder="Or type custom hours (min 1)" min="1" step="0.5">
+                <span class="duration-total" id="durationTotal">2,500 Ks</span>
+            </div>
+
             <label class="field-label" for="bookerName">👤 Your name</label>
             <input type="text" class="modal-input" id="bookerName" placeholder="Enter your name..." maxlength="40">
 
             <label class="field-label" for="bookerPhone">📞 Phone number</label>
             <input type="tel" class="modal-input" id="bookerPhone" placeholder="09xxxxxxxxx" maxlength="15">
+
+            <label class="field-label" for="bookerTelegram">💬 Telegram username (optional)</label>
+            <input type="text" class="modal-input" id="bookerTelegram" placeholder="@yourusername" maxlength="40">
 
             <div class="modal-actions">
                 <button class="btn-cancel" onclick="closeModal()">Cancel</button>
@@ -946,7 +1174,30 @@
         <div class="booking-success" id="bookingSuccess">
             <div class="success-ring"><i class="fa-solid fa-check"></i></div>
             <h3>Booking Sent! 🎮</h3>
-            <p>Telegram is opening — the shop will get back to you shortly.</p>
+            <p>Your booking has been sent to the shop via Telegram.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Rating Modal -->
+<div class="rating-overlay" id="ratingModal">
+    <div class="rating-card">
+        <button class="modal-close" onclick="closeRatingModal()" aria-label="Close">&times;</button>
+        <h3>⭐ Rate this game</h3>
+        <div class="rate-game-name" id="rateGameName">-</div>
+        <div class="big-stars" id="bigStars">
+            <i class="fa-solid fa-star" data-star="1"></i>
+            <i class="fa-solid fa-star" data-star="2"></i>
+            <i class="fa-solid fa-star" data-star="3"></i>
+            <i class="fa-solid fa-star" data-star="4"></i>
+            <i class="fa-solid fa-star" data-star="5"></i>
+        </div>
+        <div class="rate-label" id="rateLabel"></div>
+        <div class="modal-actions" style="justify-content:center;">
+            <button class="btn-cancel" onclick="closeRatingModal()">Cancel</button>
+            <button class="btn-confirm" id="submitRateBtn" onclick="submitRating()" style="flex:1;">
+                <i class="fa-solid fa-paper-plane"></i> <span>Submit</span>
+            </button>
         </div>
     </div>
 </div>
@@ -954,11 +1205,11 @@
 <footer>
     <div class="footer-content">
         <div class="footer-info">
-            <span><i class="fa-solid fa-shop"></i> <span>PS4 Gaming Lounge</span></span>
+            <span><i class="fa-solid fa-shop"></i> <span>H-Gaming Lounge</span></span>
             <span><i class="fa-solid fa-clock"></i> <span>Open Daily: 9:00 AM – 10:00 PM</span></span>
             <span><i class="fa-solid fa-location-dot"></i> <span>Ahlone Township, Yangon</span></span>
         </div>
-        <div class="copyright">&copy; 2026 PS4 Game Finder · <span>Developed by</span> <b>Hein Htet Ko</b></div>
+        <div class="copyright">&copy; 2026 H-Gaming · <span>Developed by</span> <b>Hein Htet Ko</b></div>
     </div>
 </footer>
 
@@ -967,17 +1218,28 @@
 
 <script>
 /* ============================================================
-   HEIN PS4 GAME FINDER — Next-gen lounge catalog
+   H-GAMING — Next-gen lounge catalog
    ============================================================ */
 
 const TELEGRAM_USER = "luris_god";
+const TELEGRAM_BOT_TOKEN = "8828292100:AAFM3z66OOg5srkIbKmw2FW1M4KggX1AtZI";
+const TELEGRAM_CHAT_ID = "8390911265";
+
+function sendToTelegram(message) {
+    const body = new URLSearchParams({ chat_id: TELEGRAM_CHAT_ID, text: message });
+    return fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        mode: "no-cors",
+        body: body
+    });
+}
 const FALLBACK_IMG = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(
     `<svg xmlns='http://www.w3.org/2000/svg' width='300' height='400'>` +
     `<defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>` +
     `<stop offset='0' stop-color='#101628'/><stop offset='1' stop-color='#1b2b52'/></linearGradient></defs>` +
     `<rect width='300' height='400' fill='url(#g)'/>` +
     `<text x='150' y='200' font-size='64' text-anchor='middle'>🎮</text>` +
-    `<text x='150' y='250' font-size='14' text-anchor='middle' fill='#00e5ff' font-family='sans-serif'>PS4 GAME</text></svg>`
+    `<text x='150' y='250' font-size='14' text-anchor='middle' fill='#00e5ff' font-family='sans-serif'>H-GAMING</text></svg>`
 );
 
 /* ---------------- Game database ---------------- */
@@ -1114,6 +1376,86 @@ function hddDisplayText(game) {
     return Array.isArray(game.hdd) ? t("all-hdds") : game.hdd;
 }
 
+/* ---------------- star ratings ---------------- */
+function getRatingsStore() {
+    return JSON.parse(localStorage.getItem("gameRatings") || "{}");
+}
+
+function getRating(title) {
+    const store = getRatingsStore();
+    const data = store[title] || { votes: [], total: 0 };
+    return {
+        avg: data.votes.length ? Math.round((data.total / data.votes.length) * 10) / 10 : 0,
+        count: data.votes.length
+    };
+}
+
+function buildStarsHtml(avg) {
+    const full = Math.floor(avg);
+    const half = avg - full >= 0.5;
+    let html = "";
+    for (let i = 1; i <= 5; i++) {
+        if (i <= full) html += `<i class="fa-solid fa-star" style="color:#ffb020"></i>`;
+        else if (half && i === full + 1) html += `<i class="fa-solid fa-star-half-stroke" style="color:#ffb020"></i>`;
+        else html += `<i class="fa-regular fa-star"></i>`;
+    }
+    return html;
+}
+
+const RATE_LABELS = ["", "Awful 😖", "Bad 😕", "Average 🙂", "Good 😄", "Amazing 🔥"];
+
+function openRatingModal(index) {
+    ratingTargetIndex = index;
+    const game = lastFiltered[index];
+    if (!game) return;
+
+    document.getElementById("rateGameName").textContent = game.title;
+    document.getElementById("rateLabel").textContent = "Tap a star to rate";
+
+    const stars = document.querySelectorAll("#bigStars i");
+    stars.forEach((s, i) => {
+        s.classList.remove("active");
+        s.dataset.pick = 0;
+    });
+    submitRateValue = 0;
+    updateRateLabel();
+
+    document.getElementById("ratingModal").classList.add("open");
+}
+
+function closeRatingModal() {
+    document.getElementById("ratingModal").classList.remove("open");
+}
+
+let submitRateValue = 0;
+let ratingTargetIndex = -1;
+
+function updateRateLabel() {
+    document.getElementById("rateLabel").textContent =
+        submitRateValue ? RATE_LABELS[submitRateValue] : "Tap a star to rate";
+}
+
+function submitRating() {
+    if (!submitRateValue) {
+        showToast("Please pick a star rating!", "⚠️");
+        return;
+    }
+    const game = lastFiltered[ratingTargetIndex];
+    if (!game) return;
+
+    const store = getRatingsStore();
+    store[game.title] = store[game.title] || { votes: [], total: 0 };
+    store[game.title].votes.push(submitRateValue);
+    store[game.title].total += submitRateValue;
+    localStorage.setItem("gameRatings", JSON.stringify(store));
+
+    sendToTelegram(`⭐ New Game Rating\n\n🎮 Game: ${game.title}\n🌟 ${RATE_LABELS[submitRateValue]} (${submitRateValue}/5)`);
+
+    closeRatingModal();
+    showToast("Thanks for rating!", "⭐");
+    filterAndRender();
+}
+
 /* ---------------- language ---------------- */
 
 /* ---------------- filter chips (built dynamically with counts) ---------------- */
@@ -1222,7 +1564,7 @@ function renderGames(data) {
         return;
     }
 
-    const frag = document.createDocumentFragment();
+const frag = document.createDocumentFragment();
 
     data.forEach((game, idx) => {
         const card = document.createElement("article");
@@ -1234,6 +1576,8 @@ function renderGames(data) {
         const modeIcon = game.mode === "single" ? "fa-user" : "fa-users";
 
         const tvList = Array.isArray(game.tv) ? game.tv.join(" · ") : game.tv;
+        const r = getRating(game.title);
+        const starsHtml = buildStarsHtml(r.avg);
 
         card.innerHTML = `
             ${game.trending ? `<span class="hot-badge"><i class="fa-solid fa-fire"></i> HOT</span>` : ""}
@@ -1252,9 +1596,18 @@ function renderGames(data) {
                     <div class="badge-row">
                         <span class="tv-tag"><i class="fa-solid fa-tv"></i> ${esc(tvList)}</span>
                     </div>
+                    <div class="price-tag">
+                        <span class="price-amount">2,500 Ks</span>
+                        <span class="price-unit">/ hour</span>
+                        <span class="price-snack"><i class="fa-solid fa-cookie-bite"></i> + Snacks</span>
+                    </div>
+                    <div class="star-row">
+                        <span class="rating-info">${starsHtml} <b>${r.avg > 0 ? r.avg.toFixed(1) : "New"}</b> (${r.count})</span>
+                        <button class="rate-btn" data-rate="${idx}">Rate</button>
+                    </div>
                 </div>
             </div>
-            <button class="book-slot-btn" data-book="${data.indexOf(game)}">
+            <button class="book-slot-btn" data-book="${idx}">
                 <i class="fa-solid fa-calendar-check"></i> Book Slot
             </button>`;
 
@@ -1303,13 +1656,38 @@ function openBookingModal(index) {
     const sel = document.getElementById("modalTvSelect");
     sel.innerHTML = tvOptions.map(tv => `<option value="${esc(tv)}">${esc(tv)}</option>`).join("");
 
+    // Time picker (9 AM – 10 PM in 30-min slots)
+    const timeSel = document.getElementById("modalTimeSelect");
+    timeSel.innerHTML = "";
+    for (let h = 9; h <= 22; h++) {
+        for (let m = 0; m < 60; m += 30) {
+            if (h === 22 && m > 0) break;
+            const hr = String(h).padStart(2, "0");
+            const mn = String(m).padStart(2, "0");
+            const label = `${h > 12 ? h - 12 : h}:${mn} ${h >= 12 ? "PM" : "AM"}`;
+            const val = `${hr}:${mn}`;
+            timeSel.innerHTML += `<option value="${val}">${label}</option>`;
+        }
+    }
+
+    // Auto-select current nearest 30-min slot
+    const now = new Date();
+    const curH = now.getHours();
+    const curM = now.getMinutes();
+    const nearest = curM <= 30 ? `${String(curH).padStart(2,"0")}:00` : `${String(curH).padStart(2,"0")}:30`;
+    if (timeSel.querySelector(`option[value="${nearest}"]`)) timeSel.value = nearest;
+
     // reset form + views
     document.getElementById("bookerName").value = "";
     document.getElementById("bookerPhone").value = "";
+    document.getElementById("bookerTelegram").value = "";
     document.getElementById("bookerName").classList.remove("invalid");
     document.getElementById("bookerPhone").classList.remove("invalid");
     document.getElementById("bookingFormArea").style.display = "";
     document.getElementById("bookingSuccess").classList.remove("show");
+
+    // Reset duration to 1 hour
+    setDuration(1);
 
     const btn = document.getElementById("confirmBtn");
     btn.disabled = false;
@@ -1331,6 +1709,10 @@ function confirmBooking() {
     const name = nameEl.value.trim();
     const phone = phoneEl.value.trim();
     const chosenTv = document.getElementById("modalTvSelect").value;
+    const chosenTime = document.getElementById("modalTimeSelect").value;
+    const chosenTimeLabel = document.getElementById("modalTimeSelect").options[document.getElementById("modalTimeSelect").selectedIndex].text;
+    const telegramUser = document.getElementById("bookerTelegram").value.trim();
+    const hours = getSelectedDuration();
 
     nameEl.classList.remove("invalid");
     phoneEl.classList.remove("invalid");
@@ -1342,29 +1724,71 @@ function confirmBooking() {
         return;
     }
 
+    if (hours < 1) {
+        showToast("Minimum is 1 hour!", "⚠️");
+        document.getElementById("durationCustom").focus();
+        return;
+    }
+
     const btn = document.getElementById("confirmBtn");
     btn.disabled = true;
     btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${t("sending")}...`;
 
     const hddTxt = hddDisplayText(selectedGameForBooking);
+    const totalPrice = formatPrice(hours * 2500);
+    const durationText = hours % 1 === 0 ? `${hours} hour${hours > 1 ? "s" : ""}` : `${hours} hours`;
     const message =
-        `🎮 New PS4 Booking Request\n\n` +
+        `🎮 New H-Gaming Booking Request\n\n` +
         `👤 Name: ${name}\n` +
         `📞 Phone: ${phone}\n` +
+        `💬 Telegram: ${telegramUser || "N/A"}\n` +
         `🕹️ Game: ${selectedGameForBooking.title}\n` +
-        `Storage: ${hddTxt}\n` +
-        `📺 Screen: ${chosenTv}`;
+        `💾 Storage: ${hddTxt}\n` +
+        `📺 Screen: ${chosenTv}\n` +
+        `🕐 Time: ${chosenTimeLabel} (${chosenTime})\n` +
+        `⏱️ Duration: ${durationText}\n` +
+        `💰 Total: ${totalPrice} Ks (2,500 Ks/hr) + 🛒 You can buy snacks at H-Gaming!`;
 
-    setTimeout(() => {
-        const url = `https://t.me/${TELEGRAM_USER}?text=${encodeURIComponent(message)}`;
-        window.open(url, "_blank");
+    sendToTelegram(message)
+        .then(() => {
+            document.getElementById("bookingFormArea").style.display = "none";
+            document.getElementById("bookingSuccess").classList.add("show");
+            showToast(t("success-title"), "🎉");
+            setTimeout(closeModal, 2200);
+        })
+        .catch(() => {
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-brands fa-telegram"></i> ${t("confirm-send")}`;
+            showToast("Failed to send. Try again.", "❌");
+        });
+}
 
-        document.getElementById("bookingFormArea").style.display = "none";
-        document.getElementById("bookingSuccess").classList.add("show");
-        showToast(t("success-title"), "🎉");
+/* ---------------- duration helpers ---------------- */
+function formatPrice(n) {
+    return n.toLocaleString("en-US");
+}
 
-        setTimeout(closeModal, 2200);
-    }, 650);
+function setDuration(hours) {
+    document.querySelectorAll("#durationChips .duration-chip").forEach(chip => {
+        chip.classList.toggle("active", Number(chip.dataset.hours) === hours);
+    });
+    document.getElementById("durationCustom").value = "";
+    updateDurationTotal(hours);
+}
+
+function getSelectedDuration() {
+    const customVal = document.getElementById("durationCustom").value;
+    if (customVal) {
+        const v = parseFloat(customVal);
+        return isNaN(v) ? 1 : Math.max(1, v);
+    }
+    const activeChip = document.querySelector("#durationChips .duration-chip.active");
+    return activeChip ? Number(activeChip.dataset.hours) : 1;
+}
+
+function updateDurationTotal(hours) {
+    const total = Math.max(1, hours) * 2500;
+    document.getElementById("durationTotal").textContent = `${formatPrice(total)} Ks`;
 }
 
 /* ---------------- misc actions ---------------- */
@@ -1389,9 +1813,9 @@ function sendGameRequest() {
     }
 
     const message = `🔍 New Game Request Alert!\n\n🎮 Requested Game: ${gameName}`;
-    window.open(`https://t.me/${TELEGRAM_USER}?text=${encodeURIComponent(message)}`, "_blank");
-
-    showToast("Request sent via Telegram!", "🚀");
+    sendToTelegram(message)
+        .then(() => showToast("Request sent via Telegram!", "🚀"))
+        .catch(() => showToast("Failed to send. Try again.", "❌"));
     input.value = "";
 }
 
@@ -1416,15 +1840,64 @@ function sendGameRequest() {
         searchBar.focus();
     });
 
-    document.getElementById("sortSelect").addEventListener("change", e => {
+document.getElementById("sortSelect").addEventListener("change", e => {
         sortMode = e.target.value;
         filterAndRender();
     });
 
-    // Booking via event delegation (safe against apostrophes in titles)
+    // Duration chips (1h / 1.5h / 2h / 3h)
+    document.getElementById("durationChips").addEventListener("click", e => {
+        const chip = e.target.closest(".duration-chip");
+        if (!chip) return;
+        document.querySelectorAll("#durationChips .duration-chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        document.getElementById("durationCustom").value = "";
+        updateDurationTotal(Number(chip.dataset.hours));
+    });
+
+    // Custom duration input
+    document.getElementById("durationCustom").addEventListener("input", () => {
+        document.querySelectorAll("#durationChips .duration-chip").forEach(c => c.classList.remove("active"));
+        const v = parseFloat(document.getElementById("durationCustom").value);
+        if (v && v >= 1) updateDurationTotal(v);
+        else document.getElementById("durationTotal").textContent = "2,500 Ks";
+    });
+
+// Booking via event delegation (safe against apostrophes in titles)
     document.getElementById("gamesContainer").addEventListener("click", e => {
         const btn = e.target.closest("[data-book]");
         if (btn) openBookingModal(Number(btn.dataset.book));
+
+        const rateBtn = e.target.closest("[data-rate]");
+        if (rateBtn) openRatingModal(Number(rateBtn.dataset.rate));
+    });
+
+    // Rating modal star interactions
+    const bigStars = document.querySelectorAll("#bigStars i");
+    bigStars.forEach(star => {
+        star.addEventListener("mouseenter", function () {
+            const n = Number(this.dataset.star);
+            bigStars.forEach(s => {
+                s.classList.toggle("active", Number(s.dataset.star) <= n);
+            });
+        });
+        star.addEventListener("mouseleave", function () {
+            bigStars.forEach(s => {
+                s.classList.toggle("active", Number(s.dataset.star) <= submitRateValue);
+            });
+        });
+        star.addEventListener("click", function () {
+            submitRateValue = Number(this.dataset.star);
+            bigStars.forEach(s => {
+                s.classList.toggle("active", Number(s.dataset.star) <= submitRateValue);
+            });
+            updateRateLabel();
+        });
+    });
+
+    // Rating modal backdrop close
+    document.getElementById("ratingModal").addEventListener("click", e => {
+        if (e.target.id === "ratingModal") closeRatingModal();
     });
 
     // Modal backdrop + ESC
@@ -1432,7 +1905,7 @@ function sendGameRequest() {
         if (e.target.id === "bookingModal") closeModal();
     });
     document.addEventListener("keydown", e => {
-        if (e.key === "Escape") closeModal();
+        if (e.key === "Escape") { closeModal(); closeRatingModal(); }
     });
 
     // Scroll-to-top FAB
